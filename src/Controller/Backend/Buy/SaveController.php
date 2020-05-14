@@ -16,7 +16,7 @@ class SaveController
     }
 
     /**
-     * Returns a JSON Response including the whole list of products in case of success
+     * Returns a JSON Response and try to save a product
      * @param Request $request
      * @param BookingService $productService
      * 
@@ -25,7 +25,6 @@ class SaveController
      */
     public function index(Request $request, BookingService $bookingService) : JsonResponse
     {
-
         try {
 
             $paramsPost = $request->getContent();
@@ -42,7 +41,6 @@ class SaveController
             if (!$this->isValidField($paramsPost['id_activity'])){
                 return ResponseGenerator::makeResponse(false,Response::HTTP_BAD_REQUEST, "Id Actividad es requerido en peticion");
             }
-
 
             if (!$this->isValidField($paramsPost['date_activity'])){
                 return ResponseGenerator::makeResponse(false,Response::HTTP_BAD_REQUEST, "Fecha de actividad es requerida en peticion");
@@ -71,23 +69,15 @@ class SaveController
             $booking->setActivityDate($dateActivity);
             $booking->setCreatedAt($currentDate);
 
+            $response = $bookingService->save($booking);
+            $code = ($response) ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST;
+            $message = ($response) ? "Item saved properly" : "Item could not be saved";
 
-            $bookingService->save($booking);
-
-
-
-            return new JsonResponse([
-                'success' => false,
-                'code' => 200,
-                'message' => "Item saved properly",
-            ]);
+            return ResponseGenerator::makeResponse($response, $code, $message);
 
         } catch(\Exception $e) {
-            return new JsonResponse([
-                'success' => false,
-                'code' => $e->getCode(),
-                'message' => $e->getMessage(),
-            ]);
+
+            return ResponseGenerator::makeResponse(false, $e->getCode(), $e->getMessage());
         }
     }
 }

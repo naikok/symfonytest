@@ -35,7 +35,6 @@
     <ul id="render-products">
         <li v-for="(item) in items" :key="item.id" style="padding:20px">
             <a>Titulo: <% item.title %> Precio: <% item.price %> <input type="submit" class="button-buy" v-bind="item" value="Añadir al carro">
-
         </li>
     </ul>
     </div>
