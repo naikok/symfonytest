@@ -5,20 +5,29 @@
         <title>{% block title %}Welcome to the app vue!{% endblock %}</title>
         {% block stylesheets %}
 
-           <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.css">-->
+           <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css" type="text/css" />
         {% endblock %}
         {% block javascripts %}
             <script src="https://unpkg.com/vue-router"></script>
             <script src="https://unpkg.com/vue"></script>
             <script src="https://unpkg.com/vuex"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/async/3.1.1/async.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-select/3.10.3/vue-select.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vuejs-datepicker/1.6.2/vuejs-datepicker.min.js"></script>
             <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-            <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>-->
+            <script src="https://cdn.jsdelivr.net/npm/vue2-datepicker@1.9.6/dist/build.min.js"></script>
+            <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-bootstrap-datetimepicker/5.0.1/vue-bootstrap-datetimepicker.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
+
+            <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         {% endblock %}
     </head>
     <body>
     <div style="width:100%; height:auto">
         {% block content %}{% endblock %}
     </div>
+
     </body>
 </html>

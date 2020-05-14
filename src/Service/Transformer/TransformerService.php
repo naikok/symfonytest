@@ -6,7 +6,7 @@ use JMS\Serializer\SerializerBuilder;
 class TransformerService
 {
     /**
-     * Transform entities to array of stdclass
+     * Transform entities to array of stdclass (better to printout)
      * @param array $object contain an entity of any type
      * @return \Stclass[]
      *

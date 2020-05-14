@@ -4,11 +4,11 @@ index:
     methods: [GET]
 
 save:
-    path: /back/save
-    controller: App\Controller\Backend\SaveController::index
+    path: /back/buy/save
+    controller: App\Controller\Backend\Buy\SaveController::index
     methods: [POST]
 
 products:
-    path: /back/products
-    controller: App\Controller\Backend\GetAllProductsController::index
+    path: /back/activities
+    controller: App\Controller\Backend\Activities\GetActivitiesController::index
     methods: [GET]

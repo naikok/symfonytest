@@ -4,9 +4,24 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
-    <script>
 
+
+     <script type="text/javascript">
       document.addEventListener('DOMContentLoaded', function () {
+
+
+          var renderComponent = new Vue({
+              el: '#render-products',
+              delimiters: ['<%', '%>'],
+              data: {
+                  items: []
+              },
+              methods: {
+                  setProductsToBeRendered(items) {
+                      this.items = items;
+                  }
+              }
+          })
 
           const store = new Vuex.Store({
               state: {
@@ -18,24 +33,23 @@
                   },
               },
               actions: {
-                  loadData({commit}) {
-                          axios.get('/back/products').then(function(response){
-                              commit('setProducts', response.data.message);
-                          }).catch(function (error) {
-                              console.log("error returning list of products");
-                          })
-                  },
-                  saveData({commit},payload) {
+                  loadActivities({commit},payload) {
+                      var date = payload.date +"23:59:59";
+                      var url = "back/activities?people="+payload.people+"&date="+date;
+                      axios.get(url).then(function (response) {
 
-                      axios.post('/back/save',payload).then(function(response) {
-                          var responseObject = response.data;
-                          alert("Producto guardado, introduce alguno más para ver la lista...");
-                          console.log(response.data.message);
+                              console.log(response.data.message);
+                              if (response.data.message.length > 0) {
+                                  renderComponent.setProductsToBeRendered(response.data.message);
+                              } else {
+                                  swal("Aviso", "No hay actividades para ese dia", "warning");
+                              }
 
                       }).catch(function (error) {
-                          alert("error al guardar producto");
+                                  console.log("error returning list of products");
                       })
-                  }
+                  },
+
               },
               mutations: {
                   setProducts(state, products) {
@@ -45,79 +59,143 @@
           });
 
 
+
           const app = new Vue({
                 store: store,
                 delimiters: ['<%', '%>'],
                 el: '#app',
                 data: {
+                    date: '',
                     products:[],
-                    name: null,
-                    price: null,
-                    barcode: null,
+                    people: [
+                        {key: 1, id: "1"},
+                        {key: 2, id: "2"},
+                        {key: 3, id: "3"},
+                        {key: 4, id: "4"},
+                        {key: 5, id: "5"},
+                        {key: 6, id: "6"},
+                        {key: 7, id: "7"}
+                    ],
+                    selectedPerson: "",
                     errors:[]
+                },
+                mounted: function() {
+
+                      var args = {
+                          format: 'YYYY-MM-DD'
+                      };
+                      this.$nextTick(function() {
+                          $('.datepicker').datetimepicker(args)
+                      });
+
+                      this.$nextTick(function() {
+                          $('.time-picker').datetimepicker({
+                              format: 'LT'
+                          })
+                      });
                 },
                 methods: {
                     checkForm: function (e) {
                      
                         this.errors = [];
 
-                        if (!this.name) {
-                            this.errors.push("El nombre de producto es obligatorio.");
+                        if (!this.selectedPerson) {
+                            this.errors.push("Debes seleccionar el numero de personas.");
                         }
 
-                        if (!this.price) {
-                            this.errors.push('El precio de producto es obligatorio.');
-                        }
-
-                        if (!this.barcode) {
-                            this.errors.push('El barcode de producto es obligatorio.');
+                        if (!this.date) {
+                            this.errors.push("La fecha de actividad es obligatoria");
                         }
 
                         if (!this.errors.length) {
-
-
-                            var payload= {name: this.name, price:this.price, barcode: this.barcode};
-                            this.$store.dispatch('saveData', payload);
-                            this.$store.dispatch('loadData'); // dispatc
-
-                            this.products = this.$store.getters.products; //
-                            console.log(this.products);
-
+                            console.log("El payload es");
+                            var payload= {date: this.date, people:this.selectedPerson};
+                            console.log(payload);
+                            this.$store.dispatch('loadActivities', payload);
                         }
 
                         e.preventDefault();
                     }
                 }
             })
-       })
+
+
+          $('.datepicker').on('dp.change', function(event) {
+              var date = event.date.format('YYYY-MM-DD');
+              Vue.set(app, 'date', date);
+          });
+
+
+
+          $(document).on("click",".button-buy",function() {
+              var full = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '');
+              var uri = full + "/back/buy/save";
+              var dateactivity =  $("#date").val() + "00:00:00";
+              var idactivity = $(this).attr("id");
+
+              var price = $(this).attr("price")
+
+              var e = document.getElementById("people");
+              var people = e.options[e.selectedIndex].value;
+
+
+              var params = {"id_activity":idactivity, 'people':people, "date_activity":dateactivity, "price_total":price};
+              $.ajax({
+                  url: uri,
+                  dataType: "json",
+                  contentType: "application/json;charset=utf-8",
+                  type: "POST",
+                  data: JSON.stringify(params),
+                  success: function (msg) {
+                      if (msg.code == 200) {
+                          swal("Enhorabuena", "Item comprado correctamente", "success");
+                      }
+                  }
+              });
+
+
+
+
+          });
+
+      })
     </script>
 {% endblock %}
 {% block content %}
     <form id="app" @submit.prevent="checkForm" name="app" method="POST">
 
         <p v-if="errors.length">
-            <b>Please correct the following error(s):</b>
-        <ul>
-            <li v-for="error in errors"><% error %></li>
-        </ul>
-        <ul>
-            <li v-for="(product) in products" :key="product.id">
-                <p>Nombre: <% product.name %> Precio: <% product.price %> Barcode: <% product.barcode %></p>
-            </li>
-        </ul>
+            <b>Porfavor revise su formulario:</b>
+            <ul>
+                <li v-for="error in errors"><% error %></li>
+            </ul>
         </p>
         <p>
-            <label for="name">Name<label><input type="text" name="name" id="name" v-model="name">
+            <div>Seleccione número de personas: <% selectedPerson %></div><br/>
+            <select v-model="selectedPerson" id="people">
+                <option v-for="person in people" :value="person.key"><% person.id %></option>
+            </select>
         </p>
-        <p>
-            <label for="age">Price<label><input type="text" name="price" id="price" v-model="price" min="0">
-        </p>
-        <p>
-            <label for="barcode">Barcode<label><input type="text" name="barcode" id="barcode" v-model="barcode" min="0">
-        </p>
+
+        <div style="position: relative">
+            <div>Seleccione fecha de calendario para la actividad: <% date %></div><br/>
+                    <input type="text" id="date" v-model="date" class="datepicker">
+
+        </div>
+
         <p>
             <input type="submit" value="Submit">
         </p>
-
     </form>
+
+
+    <div id="container-products">
+    <ul id="render-products">
+        <!-- <button @click="setMyDateToToday">Set date one to today</button> -->
+        <li v-for="(item) in items" :key="item.id" style="padding:20px">
+            <a>Titulo: <% item.title %> Precio: <% item.price %> <input type="submit" class="button-buy" v-bind="item" value="Añadir al carro">
+
+        </li>
+    </ul>
+    </div>
 {% endblock %}
