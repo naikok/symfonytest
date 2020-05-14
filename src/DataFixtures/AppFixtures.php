@@ -9,6 +9,11 @@ use App\Entity\Activity;
 
 class AppFixtures extends Fixture
 {
+
+    /*
+     * Load Activities as example into database
+     *
+     */
     public function load(ObjectManager $manager)
     {
 
@@ -16,9 +21,7 @@ class AppFixtures extends Fixture
 
         for ($i = 0; $i < 20; $i++) {
             $activity = new Activity();
-
             $price = $faker->randomFloat(2,15,50);
-
             $activity->setPrice($price);
             $actividadTitle = "Act ".$faker->buildingNumber;
             $activity->setTitle($actividadTitle);
