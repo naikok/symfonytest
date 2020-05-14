@@ -11,7 +11,7 @@ use App\Helpers\ResponseGenerator;
 class GetActivitiesController
 {
     /**
-     * Returns a JSON Response including the whole list of products in case of success
+     * Returns a JSON Response including the activity list 
      * @param Request request
      * @param ActivityService $activityService
      * @param TransformerService $transformer
@@ -28,6 +28,7 @@ class GetActivitiesController
             $fecha = new \DateTime();
             $time = strtotime($date);
             $fecha->setTimestamp($time);
+
             $result =  $activityService->getAvailableActivities($fecha, $people);
             $activities = $transformer->transform($result);
             $success = true;
