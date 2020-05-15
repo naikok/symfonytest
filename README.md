@@ -7,4 +7,10 @@ Docker is required for executing the app. Please read the doc at https://github.
 Testing:
 
 For executing testing and cover this app we are using sqlite. 
-For runing the tests, remember to access to the container from the symfony-dockerized folder by sudo sh accesscontainer.sh and once you are in docker container, you can type: ./vendor/bin/phpunit tests
+For runing the tests, remember to access to the container from the symfony-dockerized folder:
+
+Go to the symfony-dockerized folder and type:
+
+sudo sh accesscontainer.sh 
+
+You are in docker container, you can type: ./vendor/bin/phpunit tests
