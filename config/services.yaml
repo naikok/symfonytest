@@ -15,6 +15,7 @@ services:
     # this creates a service per class whose id is the fully-qualified class name
     App\:
         resource: '../src/*'
+        exclude: '../src/{Entity,Fixture,Migrations,Tests,Kernel.php}'
        # exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
 
     # controllers are imported separately to make sure services can be injected
@@ -31,8 +32,21 @@ services:
         resource: '../src/Service/Transformer'
         tags: ['controller.service_arguments']
 
-    #Stichoza\GoogleTranslate\GoogleTranslate:
+    App\Service\ActivityService:
+        autoconfigure: true
+        public: true
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@App\Repository\ActivityRepository'
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
-    App\PersistenceService\ProductService:
+    App\Service\Transformer\TransformerService:
+        autoconfigure: true
+        public: true
+
+    App\Service\BookingService:
+        autoconfigure: true
+        public: true
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@App\Repository\BookingRepository'
+

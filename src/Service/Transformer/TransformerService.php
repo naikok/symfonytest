@@ -2,21 +2,22 @@
 namespace App\Service\Transformer;
 
 use JMS\Serializer\SerializerBuilder;
+use App\Service\Transformer\ITransformer;
 
-class TransformerService
+class TransformerService implements ITransformer
 {
     /**
-     * Transform entities to array of stdclass (better to printout)
+     * Transform array of entities to array of stdclass (better to printout)
      * @param array $object contain an entity of any type
      * @return \Stclass[]
      *
      */
 
-    public function transform(array $object) : array
+    public function transform($object)
     {
         $serializer = SerializerBuilder::create()->build();
         $json = $serializer->serialize($object, 'json');
-        return json_decode($json,true);
+        return json_decode($json);
     }
 
 }

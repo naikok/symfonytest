@@ -2,15 +2,16 @@
 namespace App\Tests\Service;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use App\Entity\Activity;
-use App\Service\ActivityService;
+use App\Entity\Booking;
+use App\Service\BookingService;
 
 
-class ActivityServiceTest extends WebTestCase
+class TransformerServiceTest extends WebTestCase
 {
+
     /**
      *
-     * @covers \App\Service\ActivityService::getAvailableActivities
+     * @covers \App\Service\BookingService::save
      */
     public function testFindByAllActiveSubscriptions()
     {
@@ -18,21 +19,25 @@ class ActivityServiceTest extends WebTestCase
         $container = self::$kernel->getContainer();
         $container = self::$container;
         $activityService  = self::$container->get('App\Service\ActivityService');
+
+        $transformerService = self::$container->get('App\Service\Transformer\TransformerService');
         $date = new \DateTime('2020-05-21 14:00:00');
         $people = 5;
         $result = $activityService->getAvailableActivities($date, $people);
-        $this->assertIsArray($result);
+
         $this->assertNotEmpty($result);
-        $this->assertTrue(count($result) > 0);
-        foreach ($result as $item) {
-            $this->assertTrue($item instanceof Activity);
+        $this->assertIsArray($result);
+        $arrayTransformed = $transformerService->transform($result);
+        $this->assertIsArray($arrayTransformed);
+        $this->assertNotEmpty($arrayTransformed);
+        foreach($arrayTransformed as $object) {
+            $this->assertTrue($object instanceof \stdClass);
         }
     }
 
     protected function tearDown(): void
     {
-       parent::tearDown();
+        parent::tearDown();
     }
 
 }
-

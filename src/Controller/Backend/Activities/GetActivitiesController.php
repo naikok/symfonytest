@@ -11,7 +11,7 @@ use App\Helpers\ResponseGenerator;
 class GetActivitiesController
 {
     /**
-     * Returns a JSON Response including the activity list 
+     * Returns a JSON Response including the activity list
      * @param Request request
      * @param ActivityService $activityService
      * @param TransformerService $transformer

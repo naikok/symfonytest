@@ -16,13 +16,13 @@
             </ul>
         </p>
         <p>
-            <div>Seleccione número de personas: <% selectedPerson %></div><br/>
+        <div align="center"><h2>Seleccione número de personas: <% selectedPerson %></h2></div><br/>
             <select v-model="selectedPerson" id="people">
                 <option v-for="person in people" :value="person.key"><% person.id %></option>
             </select>
         </p>
-        <div style="position: relative">
-            <div>Seleccione fecha de calendario para la actividad: <% date %></div><br/>
+        <div style="position: relative" align="center">
+            <h2>Seleccione fecha de calendario para la actividad: <% date %></h2><br/>
             <input type="text" id="date" v-model="date" class="datepicker">
         </div>
         <p>
