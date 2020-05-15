@@ -1,6 +1,6 @@
 Requirements:
 
-This project contains the app and has been built by using symfony 5 and Vue.js for frontend.
+This project contains the app and has been built by using symfony 5 and Vue.js for managing the frontend.
 
 Docker is required for executing the app. Please read the README.md at https://github.com/naikok/symfony-dockerized first for executing and being able to mount and run this app.
 
