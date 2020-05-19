@@ -23,7 +23,7 @@ class Booking
     /**
      * @ORM\Column(type="integer", name="id_activity", type="integer", nullable=false)
      *
-     * @ORM\OneToOne(targetEntity="Activity")
+     *
      */
 
     private $idActivity;

@@ -15,7 +15,7 @@ class Activity
     /**
      * @ORM\Column(type="integer", name="id", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\OneToMany(targetEntity="Booking", mappedBy="activity")
+     *
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
